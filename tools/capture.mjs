@@ -4,7 +4,7 @@ import { appendFile } from 'fs/promises';
 
 // UDP 소켓 생성
 const socket = createSocket('udp4');
-const PORT = 50004;
+const PORT = 9763;
 
 // 파일에 데이터를 추가하는 함수
 async function appendToFile(data) {

@@ -1,0 +1,23 @@
+{
+  "name": "mvn-emulated-streamer",
+  "version": "1.0.0",
+  "description": "",
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "start": "\"ts-node\" src/index.ts"
+  },
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "node-fetch": "^3.3.2",
+    "parse-bvh": "^1.0.2",
+    "three": "^0.153.0",
+    "typescript": "^5.5.3"
+  },
+  "devDependencies": {
+    "@types/node": "^20.14.10",
+    "@types/three": "^0.153.0",
+    "ts-node": "^10.9.2"
+  }
+}

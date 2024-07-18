@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Three.js FBX Example</title>
+    <style>
+        body { margin: 0; }
+        canvas { display: block; }
+    </style>
+    <script type="importmap">
+      {
+        "imports": {
+            "three": "https://cdn.jsdelivr.net/npm/three@0.153.0/build/three.module.js",
+            "three/examples/": "https://cdn.jsdelivr.net/npm/three@0.153.0/examples/jsm/"
+        }
+      }
+  </script>
+</head>
+<body>
+    <script type="module">
+        import * as THREE from 'three';
+        import {FBXLoader} from 'three/examples/loaders/FBXLoader.js';
+
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(90, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        document.body.appendChild(renderer.domElement);
+
+        const light = new THREE.DirectionalLight(0xffffff, 1);
+        light.position.set(1, 1, 1).normalize();
+        scene.add(light);
+
+        const loader = new FBXLoader();
+        loader.load('./motion.fbx', function(object) {
+            scene.add(object);
+
+            const skeletonHelper = new THREE.SkeletonHelper(object);
+            scene.add(skeletonHelper);
+
+            const bones = skeletonHelper.bones;
+
+            function getBoneWorldRotations(bones) {
+                const rotations = [];
+                bones.forEach(bone => {
+                    bone.updateMatrixWorld(true);
+
+                    const position = new THREE.Vector3();
+                    const quaternion = new THREE.Quaternion();
+                    const scale = new THREE.Vector3();
+                    bone.matrixWorld.decompose(position, quaternion, scale);
+
+                    rotations.push(quaternion);
+                });
+                return rotations;
+            }
+
+            const clock = new THREE.Clock();
+            const mixer = new THREE.AnimationMixer(object);
+            const action = mixer.clipAction(object.animations[0]);
+            action.play();
+
+            function animate() {
+                requestAnimationFrame(animate);
+
+                const delta = clock.getDelta();
+                mixer.update(delta);
+                // console.log(delta, mixer.time);
+
+                // const rotations = getBoneWorldRotations(bones);
+                // console.log(rotations);
+
+                renderer.render(scene, camera);
+            }
+
+            animate();
+        });
+
+        camera.position.y = 100;
+        camera.position.z = 200;
+
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+    </script>
+</body>
+</html>

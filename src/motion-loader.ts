@@ -79,7 +79,7 @@ export class MotionLoader {
   }
 
   isAnimationReady() {
-    return this.mixer && this.skeletonHelper && this.animation && this.action;
+    return !!(this.mixer && this.skeletonHelper && this.animation && this.action);
   }
 
   moveNextFrame() {

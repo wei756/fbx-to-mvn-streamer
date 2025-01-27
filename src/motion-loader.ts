@@ -1,8 +1,8 @@
 import fs from 'fs';
 import * as THREE from 'three';
 import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader.js';
-import { BoneMappingType } from 'boneMapping';
-import { PoseSegment } from 'mvn-streamer';
+import { BoneMappingType } from './boneMapping.ts';
+import { PoseSegment } from './mvn-streamer.ts';
 
 export class MotionLoader {
   readonly filename: string;

@@ -51,6 +51,49 @@ export class MVNStreamer {
     'Left Toe',
   ];
 
+  static FINGER_SEGMENTS = [
+    'Left Carpus',
+    'Left First Metacarpal',
+    'Left First Proximal Phalange',
+    'Left First Distal Phalange',
+    'Left Second Metacarpal',
+    'Left Second Proximal Phalange',
+    'Left Second Middle Phalange',
+    'Left Second Distal Phalange',
+    'Left Third Metacarpal',
+    'Left Third Proximal Phalange',
+    'Left Third Middle Phalange',
+    'Left Third Distal Phalange',
+    'Left Fourth Metacarpal',
+    'Left Fourth Proximal Phalange',
+    'Left Fourth Middle Phalange',
+    'Left Fourth Distal Phalange',
+    'Left Fifth Metacarpal',
+    'Left Fifth Proximal Phalange',
+    'Left Fifth Middle Phalange',
+    'Left Fifth Distal Phalange',
+    'Right Carpus',
+    'Right First Metacarpal',
+    'Right First Proximal Phalange',
+    'Right First Distal Phalange',
+    'Right Second Metacarpal',
+    'Right Second Proximal Phalange',
+    'Right Second Middle Phalange',
+    'Right Second Distal Phalange',
+    'Right Third Metacarpal',
+    'Right Third Proximal Phalange',
+    'Right Third Middle Phalange',
+    'Right Third Distal Phalange',
+    'Right Fourth Metacarpal',
+    'Right Fourth Proximal Phalange',
+    'Right Fourth Middle Phalange',
+    'Right Fourth Distal Phalange',
+    'Right Fifth Metacarpal',
+    'Right Fifth Proximal Phalange',
+    'Right Fifth Middle Phalange',
+    'Right Fifth Distal Phalange',
+  ];
+
   ipAddr = 'localhost';
   port = 9763;
   readonly client: dgram.Socket | null = null;
@@ -126,7 +169,14 @@ export class MVNStreamer {
       ...segment.position.flatMap((v) => this.convertFloat32ToBytes(v)),
       ...segment.rotation.flatMap((v) => this.convertFloat32ToBytes(v)),
     ]);
-    const message = Buffer.from([...header, ...payloadArray]);
+    const payloadFingerArray = payload.fingerTrackingDataSegments.flatMap((segment) => [
+      ...this.convertInt32ToBytes(
+        MVNStreamer.FINGER_SEGMENTS.indexOf(segment.id)
+      ),
+      ...segment.position.flatMap((v) => this.convertFloat32ToBytes(v)),
+      ...segment.rotation.flatMap((v) => this.convertFloat32ToBytes(v)),
+    ]);
+    const message = Buffer.from([...header, ...payloadArray, ...payloadFingerArray]);
     this.send(message);
     this.sampleCounter++;
   }

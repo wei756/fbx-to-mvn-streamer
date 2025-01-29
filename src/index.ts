@@ -21,11 +21,12 @@ const motionLoader = new MotionLoader(
   let timeCode = 0;
   setInterval(() => {
     streamer.sendTimecode(Math.floor(timeCode * motionLoader.deltaTime * 1000));
+    const segments = motionLoader.getCurrentFrame();
     streamer.sendQuaternionPose({
       timeCode,
       characterId: 0,
-      bodySegments: [...motionLoader.getCurrentFrame()],
-      fingerTrackingDataSegments: [],
+      bodySegments: segments.splice(0, 23),
+      fingerTrackingDataSegments: segments,
     });
     timeCode++;
     motionLoader.moveNextFrame();
